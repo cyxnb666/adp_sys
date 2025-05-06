@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Insert Span on Space</title>
+</head>
+<body>
+    <div id="editable" contenteditable="true">在这里编辑并尝试按空格键...</div>
+</body>
+</html>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    var editableDiv = document.getElementById("editable");
+    var lastMousePos = null;
+    var currentSpan = null;
+
+    editableDiv.addEventListener("keydown", function (event) {
+        if (event.key === " ") { // 检测空格键按下
+            lastMousePos = getCursorPos(); // 获取鼠标位置
+            currentSpan = createAndInsertSpan(); // 创建并插入 span 标签
+            console.log(currentSpan)
+            //在新创建的 span 元素中插入空白文本节点
+            //currentSpan.innerHTML = "\u200B"; // 在 span 标签内插入空格//创建一个新的空白文本节点
+            // const newTextNode = document.createTextNode('\u200B') // 使用零宽空格作为文本节点内容
+            //在新创建的 span 元素中插入空白文本节点
+            // currentSpan.appendchild(newTextNode)
+            // document.getElementById('newSpan').focus()
+            currentSpan.focus()
+            // 将光标移动到 span 标签内部（可选）
+            // moveCursorToSpan(currentSpan);
+        }
+    });
+
+    function getCursorPos() {
+        var selection = window.getSelection();
+        if (selection.rangeCount > 0) {
+            var range = selection.getRangeAt(0);
+            return { x: range.getBoundingClientRect().left, y: range.getBoundingClientRect().top };
+        } else {
+            return null;
+        }
+    }
+
+    function createAndInsertSpan() {
+        var span = document.createElement("span"); // 创建 span 元素
+        //span.style.position = "absolute"; // 设置绝对定位，以便可以精确控制其位置
+        span.id = "newSpan"; // 设置绝对定位，以便可以精确控制其位置
+        span.contentEditable = true
+        span.setAttribute("tabindex", 0)
+        editableDiv.appendChild(span); // 将 span 添加到可编辑的 div 中
+        return span; // 返回新创建的 span 元素，以便后续操作（例如设置样式等）
+    }
+    function moveCursorToSpan(spanElement) {
+        var range = document.createRange();
+        range.selectNodeContents(spanElement);
+        var selection = window.getSelection();
+        selection.removeAllRanges();
+        selection.addRange(range);
+    }
+});
+</script>

@@ -1,0 +1,16 @@
+{
+  "id": "2879014",
+  "name": "iconfont",
+  "font_family": "iconfont",
+  "css_prefix_text": "icon-",
+  "description": "",
+  "glyphs": [
+    {
+      "icon_id": "1969467",
+      "name": "切换",
+      "font_class": "qiehuan",
+      "unicode": "e621",
+      "unicode_decimal": 58913
+    }
+  ]
+}

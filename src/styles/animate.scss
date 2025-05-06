@@ -1,0 +1,54 @@
+.loading{
+  width: 150px;
+  height: 15px;
+  margin: 50px auto;
+}
+.loading span{
+  display: inline-block;
+  width: 15px;
+  height: 100%;
+  margin-right: 5px;
+  border-radius: 50%;
+  background: #0079FF;
+  -webkit-animation: load 1.04s ease infinite;
+}
+.loading span:last-child{
+  margin-right: 0px; 
+}
+@-webkit-keyframes load{
+  0%{
+      opacity: 1;
+  }
+  100%{
+      opacity: 0;
+  }
+}
+.loading span:nth-child(1){
+  -webkit-animation-delay:0.13s;
+}
+.loading span:nth-child(2){
+  -webkit-animation-delay:0.26s;
+}
+.loading span:nth-child(3){
+  -webkit-animation-delay:0.39s;
+}
+.loading span:nth-child(4){
+  -webkit-animation-delay:0.52s;
+}
+.loading span:nth-child(5){
+  -webkit-animation-delay:0.65s;
+}
+
+/* 可以设置不同的进入和离开动画 */
+/* 设置持续时间和动画函数 */
+.slide-fade-enter-active {
+  transition: all .3s ease;
+}
+.slide-fade-leave-active {
+  transition: all .8s cubic-bezier(1.0, 0.5, 0.8, 1.0);
+}
+.slide-fade-enter, .slide-fade-leave-to
+/* .slide-fade-leave-active 用于 2.1.8 以下版本 */ {
+  transform: translateX(10px);
+  opacity: 0;
+}
