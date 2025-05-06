@@ -38,6 +38,11 @@
         path: 'approve',
         meta: { title: '规则审批', enable: true, roles: ['ROLE_STAIR_AUDITOR', 'ROLE_FOXBASE_AUDITOR', 'ROLE_RULE_SETTER'],},
         component: '/mainPages/decision/approve/ApproveIndex'
+      },
+      {
+        path: 'rule-analysis',
+        meta: { title: '规则调整对比', enable: true, roles: ['ROLE_SYSTEM_MANAGER', 'ROLE_RULE_SETTER'] },
+        component: '/mainPages/decision/rule-analysis/index'
       }
     ]
   },

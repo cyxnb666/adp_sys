@@ -114,6 +114,11 @@ export const main = [{
       roles: ['ROLE_STAIR_AUDITOR', 'ROLE_FOXBASE_AUDITOR', 'ROLE_RULE_SETTER']
     },
     component: () => import('@/views/mainPages/decision/approve/ApproveIndex')
+  },{
+    path: 'rule-analysis',
+    // 规则调整对比
+    meta: {title: i18n.t('router.ruleAnalysis'), enable: true, roles: ['ROLE_SYSTEM_MANAGER', 'ROLE_RULE_SETTER']},
+    component: () => import('@/views/mainPages/decision/rule-analysis/index')
   }]
 }, {
   path: '/model',

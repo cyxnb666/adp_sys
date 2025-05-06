@@ -73,7 +73,8 @@ export default {
     foldingMode: 'foldingMode',
     pleaseSelect: 'pleaseSelect',
     pleaseSelectTimePoint: 'pleaseSelectTimePoint',
-    pleaseSelectDateTime: 'pleaseSelectDateTime'
+    pleaseSelectDateTime: 'pleaseSelectDateTime',
+    click: 'Click to upload',
   },
   bomCreat: {
     createObj: 'Create business object model',
@@ -571,6 +572,23 @@ export default {
   permission: {
     permission: 'You do not have Permission to Access this Page'
   },
+  ruleAnalysis: {
+    title: 'Rule Adjustment Execution Result Analysis',
+    rule: 'Rule',
+    selectedRules: 'Selected Rules',
+    inputParam: 'Input Parameters',
+    uploadParam: 'Upload Parameter File',
+    manualParam: 'Manual Input',
+    submit: 'Submit',
+    submitSuccess: 'Submitted successfully',
+    uploadTip: 'Click to upload a file, supporting .txt or .json format, JSON format recommended',
+    manualPlaceholder: 'Manual input feature is under development...',
+    testResult: 'Test Results',
+    executeResult: 'Execution Results',
+    ruleContent: 'Rule Content',
+    jsonError: 'JSON format error, please check',
+    resultPlaceholder: 'Test result feature is under development...'
+  },
   router: {
     preData: 'Data Preprocessing',
     decision: 'Decision Rule Management',
@@ -606,7 +624,8 @@ export default {
     decExecute: 'Decision Table Execution',
     decApp: 'Decision Application',
     decAppManage: 'Decision Application Manage',
-    flowChart: 'Visual flow chart'
+    flowChart: 'Visual flow chart',
+    ruleAnalysis: 'Rule Adjustment Comparison',
   },
   store: {
     empty: 'CodeServices fetch is empty',

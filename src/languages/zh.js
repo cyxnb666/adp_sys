@@ -73,7 +73,8 @@ export default {
     foldingMode: '折行模式',
     pleaseSelect: '请选择',
     pleaseSelectTimePoint: '请选择时间点',
-    pleaseSelectDateTime: '请选择日期时间'
+    pleaseSelectDateTime: '请选择日期时间',
+    click: '点击上传',
   },
   bomCreat: {
     createObj: '创建业务对象模型',
@@ -582,6 +583,23 @@ export default {
   permission: {
     permission: '您无权操作此页面'
   },
+  ruleAnalysis: {
+    title: '规则调整执行结果分析',
+    rule: '规则',
+    selectedRules: '已选规则',
+    inputParam: '入参报文',
+    uploadParam: '上传报文',
+    submit: '提交',
+    submitSuccess: '提交成功',
+    manualParam: '手动录入',
+    uploadTip: '点击上传文件，支持.txt或.json格式，推荐使用JSON格式',
+    manualPlaceholder: '手动录入功能开发中...',
+    testResult: '测试结果',
+    executeResult: '执行结果',
+    ruleContent: '规则内容',
+    jsonError: 'JSON格式错误，请检查',
+    resultPlaceholder: '测试结果功能开发中...'
+  },
   router: {
     preData: '数据预处理',
     decision: '决策规则管理',
@@ -617,7 +635,8 @@ export default {
     decExecute: '决策表执行',
     decApp: '决策应用',
     decAppManage: '决策应用管理',
-    flowChart: '可视化流程图'
+    flowChart: '可视化流程图',
+    ruleAnalysis: '规则调整对比',
   },
   store: {
     empty: 'codeServices获取为空',

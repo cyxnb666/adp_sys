@@ -37,7 +37,7 @@ const config = {
   "locale": "zh",
   "lang": 'zh_CN',
   "baseUrlEnv": {
-    "development": "http://localhost:8901", // 子渊本地人保环境
+    "development": "http://demo-rule.zhixunchelian.com:12980/api", // 子渊本地人保环境
     "test": "http://192.168.0.206:8989", // 测试坏境
     "production": "/api"//生产环境
   },
