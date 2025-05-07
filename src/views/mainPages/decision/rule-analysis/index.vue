@@ -169,6 +169,7 @@
 
 <script>
 import editor from 'vue2-ace-editor'
+import { restoreRule, getRuleHistory, ruleExecuteCompare } from '@/api/mainPages/decision'
 
 export default {
     name: 'RuleAnalysis',
@@ -178,44 +179,7 @@ export default {
     data() {
         return {
             selectedRules: [],
-            ruleOptions: [
-                {
-                    value: 'cat1',
-                    label: '自动核保规则',
-                    children: [
-                        {
-                            value: 'rule1',
-                            label: '自动核保规则1',
-                            children: [
-                                { value: 'v1', label: 'V1' },
-                                { value: 'v2', label: 'V2' }
-                            ]
-                        },
-                        {
-                            value: 'rule2',
-                            label: '自动核保规则2',
-                            children: [
-                                { value: 'v1', label: 'V1' },
-                                { value: 'v2', label: 'V2' }
-                            ]
-                        }
-                    ]
-                },
-                {
-                    value: 'cat2',
-                    label: '人工核保规则',
-                    children: [
-                        {
-                            value: 'rule3',
-                            label: '人工核保规则1',
-                            children: [
-                                { value: 'v1', label: 'V1' },
-                                { value: 'v2', label: 'V2' }
-                            ]
-                        }
-                    ]
-                }
-            ],
+            ruleOptions: [],
             selectedRulesList: [],
             paramInputType: 'upload',
             fileList: [],
@@ -340,7 +304,85 @@ export default {
             ]
         }
     },
+    created() {
+        this.fetchRuleOptions()
+    },
     methods: {
+        async fetchRuleOptions() {
+            this.loading = true
+            try {
+                // 获取应用ID
+                const applicationId = this.$store.state.app.applicationId
+
+                // 使用restoreRule获取决策库信息
+                const response = await restoreRule(applicationId)
+
+                if (response && response.decisionRepositoryModel) {
+                    const { decisionRepositoryModel } = response
+
+                    // 处理目录结构转换为选项格式
+                    this.ruleOptions = this.buildCatalogueOptions(decisionRepositoryModel.catalogueList || [])
+                } else {
+                    console.warn('No repository model found in response')
+                }
+            } catch (error) {
+                console.error('获取规则选项失败:', error)
+                this.$message.error('获取规则数据失败，请重试')
+            } finally {
+                this.loading = false
+            }
+        },
+
+        // 将目录结构转换为级联选择器需要的格式
+        buildCatalogueOptions(catalogueList) {
+            return catalogueList.map(item => {
+                // 创建选项对象
+                const option = {
+                    value: item.id || item.path,
+                    label: item.label,
+                    path: item.path
+                }
+
+                // 如果是叶子节点，根据类型处理
+                if (item.leaf) {
+                    if (item.leafType === 'RULE') {
+                        // 如果是规则，将从历史版本获取版本选项
+                        this.fetchRuleVersions(item, option)
+                    }
+                }
+                // 如果有子节点，递归处理
+                else if (item.children && item.children.length) {
+                    option.children = this.buildCatalogueOptions(item.children)
+                }
+
+                return option
+            })
+        },
+
+        // 获取规则版本
+        async fetchRuleVersions(ruleItem, optionItem) {
+            try {
+                // 获取规则历史版本
+                const historyData = await getRuleHistory(ruleItem.ruleId, 'RULE')
+
+                if (Array.isArray(historyData) && historyData.length > 0) {
+                    // 创建版本选项
+                    const versionOptions = historyData.map(version => ({
+                        value: version.id,
+                        label: `V${version.version || '1'}`,
+                        ruleId: ruleItem.ruleId,
+                        ruleName: ruleItem.label,
+                        versionData: version
+                    }))
+
+                    // 设置规则的子选项为版本列表
+                    optionItem.children = versionOptions
+                }
+            } catch (error) {
+                console.error(`获取规则"${ruleItem.label}"的版本失败:`, error)
+            }
+        },
+
         editorInit() {
             require('brace/ext/language_tools')
             require('brace/mode/json')
@@ -354,54 +396,168 @@ export default {
             this.processSelectedRules(value)
         },
         processSelectedRules(values) {
-            values.forEach(path => {
-                if (path.length === 3) {
-                    // 如果选中了具体版本
-                    const category = this.findOptionByValue(this.ruleOptions, path[0])
-                    const rule = this.findOptionByValue(category.children, path[1])
-                    const version = this.findOptionByValue(rule.children, path[2])
+            if (!values || !values.length) return;
 
-                    this.selectedRulesList.push({
-                        id: `${path[1]}_${path[2]}`,
-                        name: rule.label,
-                        version: version.label
-                    })
+            values.forEach(path => {
+                // 递归查找选中的选项
+                const findSelectedOption = (options, pathParts, currentIndex) => {
+                    if (!options || !options.length) return null;
+
+                    const currentValue = pathParts[currentIndex];
+                    const option = options.find(opt => opt.value === currentValue);
+
+                    if (!option) return null;
+
+                    // 如果已经到达路径末尾，返回当前选项
+                    if (currentIndex === pathParts.length - 1) {
+                        return option;
+                    }
+
+                    // 否则继续递归查找
+                    if (option.children && option.children.length) {
+                        return findSelectedOption(option.children, pathParts, currentIndex + 1);
+                    }
+
+                    return null;
+                };
+
+                // 找到最后一个选中的选项（版本）
+                const versionOption = findSelectedOption(this.ruleOptions, path, 0);
+
+                if (versionOption) {
+                    // 查找父选项（规则）
+                    const findParentOption = (options, targetValue, path = []) => {
+                        for (let i = 0; i < options.length; i++) {
+                            const option = options[i];
+                            const currentPath = [...path, option];
+
+                            if (option.value === targetValue) {
+                                return currentPath;
+                            }
+
+                            if (option.children && option.children.length) {
+                                const result = findParentOption(option.children, targetValue, currentPath);
+                                if (result) return result;
+                            }
+                        }
+
+                        return null;
+                    };
+
+                    const optionPath = findParentOption(this.ruleOptions, versionOption.value);
+
+                    if (optionPath && optionPath.length >= 2) {
+                        // 找到了规则和版本
+                        const ruleOption = optionPath[optionPath.length - 2]; // 规则选项
+
+                        // 添加到已选列表
+                        this.selectedRulesList.push({
+                            id: `${ruleOption.value}_${versionOption.value}`,
+                            name: ruleOption.label || versionOption.ruleName, // 使用规则名称
+                            version: versionOption.label || `V${versionOption.versionData?.version || '1'}` // 使用版本标签
+                        });
+                    } else if (versionOption.ruleName) {
+                        // 如果找不到完整路径但有规则名称信息
+                        this.selectedRulesList.push({
+                            id: `${versionOption.ruleId}_${versionOption.value}`,
+                            name: versionOption.ruleName,
+                            version: versionOption.label
+                        });
+                    }
                 }
-            })
+            });
         },
         findOptionByValue(options, value) {
             return options.find(option => option.value === value)
         },
         removeRule(rule) {
             // 从已选列表中删除
-            this.selectedRulesList = this.selectedRulesList.filter(item => item.id !== rule.id)
+            this.selectedRulesList = this.selectedRulesList.filter(item => item.id !== rule.id);
 
             // 从级联选择器中也删除对应的值
-            const ruleId = rule.id.split('_')[0]
-            const versionId = rule.id.split('_')[1]
+            const [ruleId, versionId] = rule.id.split('_');
 
             this.selectedRules = this.selectedRules.filter(path => {
-                if (path.length === 3) {
-                    return !(path[1] === ruleId && path[2] === versionId)
-                }
-                return true
-            })
+                // 找到路径中包含此规则和版本的项
+                const lastValue = path[path.length - 1];
+                return lastValue !== versionId;
+            });
         },
         handleFileChange(file, fileList) {
             this.fileList = fileList
         },
-        handleSubmit() {
+        // 修改handleSubmit方法
+        async handleSubmit() {
+            if (this.selectedRulesList.length === 0) {
+                this.$message.warning('请至少选择一条规则');
+                return;
+            }
+
             try {
-                if (this.paramInputType === 'manual') {
-                    // 验证JSON格式
-                    JSON.parse(this.jsonContent)
+                this.loading = true;
+
+                // 获取应用ID
+                const applicationId = this.$store.state.app.applicationId;
+
+                // 构建RuleVersionMap参数
+                const ruleVersionMap = {};
+                this.selectedRulesList.forEach(rule => {
+                    const [ruleId, versionId] = rule.id.split('_');
+                    ruleVersionMap[rule.name] = versionId; // 使用规则名称作为key，版本ID作为value
+                });
+
+                // 准备请求参数
+                const formData = new FormData();
+                formData.append('applicationId', applicationId);
+                formData.append('RuleVersionMap', JSON.stringify(ruleVersionMap));
+
+                // 根据输入类型添加不同的参数
+                if (this.paramInputType === 'upload') {
+                    // 如果是文件上传
+                    if (this.fileList.length > 0) {
+                        const file = this.fileList[0].raw;
+                        formData.append('multipartFile', file);
+                    } else {
+                        this.$message.warning('请选择要上传的文件');
+                        this.loading = false;
+                        return;
+                    }
+                } else {
+                    // 如果是JSON输入
+                    try {
+                        // 验证JSON格式
+                        const jsonData = JSON.parse(this.jsonContent);
+                        formData.append('input', JSON.stringify(jsonData));
+                    } catch (error) {
+                        this.$message.error(this.$t('ruleAnalysis.jsonError'));
+                        this.loading = false;
+                        return;
+                    }
                 }
 
-                // 提交逻辑 - 暂时仅显示成功消息
-                this.$message.success(this.$t('ruleAnalysis.submitSuccess'))
+                // 调用API
+                const response = await ruleExecuteCompare(formData);
+
+                // 处理响应数据
+                if (response) {
+                    // 假设响应中包含结果数据和规则内容数据
+                    if (response.resultData) {
+                        this.resultData = response.resultData;
+                    }
+
+                    if (response.ruleContentData) {
+                        this.ruleContentData = response.ruleContentData;
+                    }
+
+                    this.$message.success(this.$t('ruleAnalysis.submitSuccess'));
+                    // 切换到结果标签
+                    this.activeTab = 'result';
+                }
             } catch (error) {
-                // JSON解析错误
-                this.$message.error(this.$t('ruleAnalysis.jsonError'))
+                console.error('规则执行比较失败:', error);
+                this.$message.error('规则执行比较失败，请重试');
+            } finally {
+                this.loading = false;
             }
         }
     },

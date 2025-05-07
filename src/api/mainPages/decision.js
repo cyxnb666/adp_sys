@@ -250,3 +250,12 @@ export function getBomdecisionLib(id) {
     method: 'get'
   })
 }
+
+// 规则执行比较API
+export function ruleExecuteCompare(data) {
+  return request({
+    url: '/rule-execute-compare/compare',
+    method: 'post',
+    data
+  })
+}
