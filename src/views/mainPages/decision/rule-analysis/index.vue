@@ -47,14 +47,6 @@
                             <el-button slot="trigger" size="small" type="primary">{{ $t('common.click') }}</el-button>
                             <div class="upload-tip" slot="tip">{{ $t('ruleAnalysis.uploadTip') }}</div>
                         </el-upload>
-
-                        <div class="file-list" v-if="fileList.length > 0">
-                            <div v-for="(file, index) in fileList" :key="index" class="file-item">
-                                <i class="el-icon-document"></i>
-                                <span>{{ file.name }}</span>
-                                <i class="el-icon-check success-icon"></i>
-                            </div>
-                        </div>
                     </div>
 
                     <!-- 手动录入区域 - JSON编辑器 -->
@@ -104,19 +96,19 @@
                                         <div class="section-title">如果:</div>
                                         <div class="result-content">
                                             <p v-for="(cond, condIndex) in result.ifCondition" :key="condIndex">{{ cond
-                                                }}</p>
+                                            }}</p>
                                         </div>
 
                                         <div class="section-title">那么:</div>
                                         <div class="result-content">
                                             <p v-for="(then, thenIndex) in result.thenAction" :key="thenIndex">{{ then
-                                                }}</p>
+                                            }}</p>
                                         </div>
 
                                         <div class="section-title">否则:</div>
                                         <div class="result-content">
                                             <p v-for="(else_, elseIndex) in result.elseAction" :key="elseIndex">{{ else_
-                                                }}</p>
+                                            }}</p>
                                         </div>
                                     </div>
                                 </div>
@@ -158,7 +150,7 @@
                                                             :key="dataIndex">
                                                             <span class="data-name">{{ dataItem.name }}</span>
                                                             <span class="data-value">&gt;&gt;&gt; {{ dataItem.value
-                                                                }}</span>
+                                                            }}</span>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -412,6 +404,17 @@ export default {
                 this.$message.error(this.$t('ruleAnalysis.jsonError'))
             }
         }
+    },
+    watch: {
+        paramInputType(newVal) {
+            if (newVal === 'upload') {
+                // Switching to upload mode - clear manual input
+                this.jsonContent = '{\n  "comCode": "",\n  "input": {\n    \n  }\n}';
+            } else if (newVal === 'manual') {
+                // Switching to manual mode - clear file list
+                this.fileList = [];
+            }
+        }
     }
 }
 </script>
@@ -424,6 +427,7 @@ export default {
         &.horizontal-layout {
             display: flex;
             align-items: flex-start;
+            max-width: 50%;
         }
     }
 
