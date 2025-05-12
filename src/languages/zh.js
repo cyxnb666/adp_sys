@@ -592,7 +592,7 @@ export default {
     submit: '提交',
     submitSuccess: '提交成功',
     manualParam: '手动录入',
-    uploadTip: '点击上传文件，支持.txt或.json格式，推荐使用JSON格式',
+    uploadTip: '点击上传文件，支持.txt格式',
     manualPlaceholder: '手动录入功能开发中...',
     testResult: '测试结果',
     executeResult: '执行结果',
@@ -670,6 +670,39 @@ export default {
   },
   importRule: {
     uploadSuccess: '上传成功,系统正在导入,请前往导入历史查看导入进展'
+  },
+  scorecardSetting: {
+    tabName: '评分卡设置',
+    scorecardSetting: '当前评分卡设置',
+    openScorecardList: '增加评分卡',
+    scorecardList: '评分卡管理列表',
+    searchPlaceholder: '请输入评分卡名称',
+    effTime: '生效时间',
+    noEffTime: '失效时间',
+    trial: '是否试运行',
+    pTrial: '请选择是否试运行',
+    trialOperation: '试运行',
+    startRun: '正式运行',
+    noScorecardData: '暂无评分卡数据',
+    add: '添加',
+    added: '已添加'
+  },
+  scorecardItem: {
+    preScorecard: '预览评分卡',
+    modifieScorecard: '修改评分卡',
+    downloadScorecard: '下载评分卡',
+    delScorecard: '删除评分卡',
+    scorecardName: '名称',
+    delContent: '确定删除这个评分卡设置吗？'
+  },
+  scorecardApproval: {
+    scorecardApproval: '评分卡审批',
+    noScorecardApproval: '暂无评分卡审批',
+    returnChange: '退回修改',
+    approvalPass: '审核通过',
+    returnChangeAdvice: '退回修改意见',
+    adviceContent: '意见内容',
+    selectScorecard: '请选择评分卡'
   }
 }
 

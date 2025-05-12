@@ -259,3 +259,11 @@ export function ruleExecuteCompare(data) {
     data
   })
 }
+
+// 获取规则执行比较的仓库信息
+export function getCompareRepository(applicationId) {
+  return request({
+    url: `/rule-execute-compare/repository/${applicationId}`,
+    method: 'get'
+  })
+}

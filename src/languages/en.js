@@ -581,7 +581,7 @@ export default {
     manualParam: 'Manual Input',
     submit: 'Submit',
     submitSuccess: 'Submitted successfully',
-    uploadTip: 'Click to upload a file, supporting .txt or .json format, JSON format recommended',
+    uploadTip: 'Click to upload a file, supporting .txt format',
     manualPlaceholder: 'Manual input feature is under development...',
     testResult: 'Test Results',
     executeResult: 'Execution Results',
@@ -656,5 +656,38 @@ export default {
   },
   flowChart: {
     flowChart: 'Visual flow chart'
+  },
+  scorecardSetting: {
+    tabName: 'Scorecard Settings',
+    scorecardSetting: 'Current Scorecard Settings',
+    openScorecardList: 'Add Scorecard',
+    scorecardList: 'Scorecard Management List',
+    searchPlaceholder: 'Please enter scorecard name',
+    effTime: 'Effective Time',
+    noEffTime: 'Expiration Time',
+    trial: 'Trial run or not',
+    pTrial: 'Please Select Whether to Trial Run',
+    trialOperation: 'Trial Operation',
+    startRun: 'Start Running',
+    noScorecardData: 'No scorecard data available',
+    add: 'Add',
+    added: 'Have been Added'
+  },
+  scorecardItem: {
+    preScorecard: 'Preview Scorecard',
+    modifieScorecard: 'Modify Scorecard',
+    downloadScorecard: 'Download Scorecard',
+    delScorecard: 'Delete Scorecard',
+    scorecardName: 'Name',
+    delContent: 'Are you sure to delete this scorecard setting?'
+  },
+  scorecardApproval: {
+    scorecardApproval: 'Scorecard Approval',
+    noScorecardApproval: 'No scorecard approval available',
+    returnChange: 'Return for Modification',
+    approvalPass: 'Approval Pass',
+    returnChangeAdvice: 'Return Modification Advice',
+    adviceContent: 'Advice Content',
+    selectScorecard: 'Please Select Scorecard'
   }
 }
