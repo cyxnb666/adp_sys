@@ -582,12 +582,12 @@ export default {
     submit: 'Submit',
     submitSuccess: 'Submitted successfully',
     uploadTip: 'Click to upload a file, supporting .txt format',
-    manualPlaceholder: 'Manual input feature is under development...',
+    onlyTxtAllowed: 'Only txt files can be uploaded',
+    fileExceeded: 'Maximum number of files exceeded. Please delete the current file first',
     testResult: 'Test Results',
     executeResult: 'Execution Results',
     ruleContent: 'Rule Content',
     jsonError: 'JSON format error, please check',
-    resultPlaceholder: 'Test result feature is under development...'
   },
   router: {
     preData: 'Data Preprocessing',

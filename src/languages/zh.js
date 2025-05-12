@@ -593,12 +593,12 @@ export default {
     submitSuccess: '提交成功',
     manualParam: '手动录入',
     uploadTip: '点击上传文件，支持.txt格式',
-    manualPlaceholder: '手动录入功能开发中...',
+    onlyTxtAllowed: '只能上传txt文件',
+    fileExceeded: '已达到文件上传数量限制，请先删除当前文件',
     testResult: '测试结果',
     executeResult: '执行结果',
     ruleContent: '规则内容',
     jsonError: 'JSON格式错误，请检查',
-    resultPlaceholder: '测试结果功能开发中...'
   },
   router: {
     preData: '数据预处理',

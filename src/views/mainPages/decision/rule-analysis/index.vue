@@ -46,10 +46,11 @@
                     <!-- 上传报文区域 -->
                     <div v-if="paramInputType === 'upload'" class="upload-area">
                         <el-upload class="upload-component" action="#" :auto-upload="false"
-                            :on-change="handleFileChange" :file-list="fileList" :limit="1" accept=".txt">
-                            <el-button slot="trigger" size="small" type="primary">{{ $t('common.click') }}</el-button>
-                            <div class="upload-tip" slot="tip">{{ $t('ruleAnalysis.uploadTip') }}</div>
-                        </el-upload>
+    :on-change="handleFileChange" :file-list="fileList" :limit="1" 
+    :on-exceed="handleExceed" accept=".txt">
+    <el-button slot="trigger" size="small" type="primary">{{ $t('common.click') }}</el-button>
+    <div class="upload-tip" slot="tip">{{ $t('ruleAnalysis.uploadTip') }}</div>
+</el-upload>
                     </div>
 
                     <!-- 手动录入区域 - JSON编辑器 -->
@@ -569,12 +570,15 @@ export default {
         handleFileChange(file, fileList) {
             // 验证文件类型
             if (file.raw && !file.raw.name.endsWith('.txt')) {
-                this.$message.warning('只能上传txt文件');
+                this.$message.warning(this.$t('ruleAnalysis.onlyTxtAllowed'));
                 this.fileList = fileList.filter(f => f.name.endsWith('.txt'));
             } else {
                 this.fileList = fileList;
             }
         },
+        handleExceed() {
+    this.$message.warning(this.$t('ruleAnalysis.fileExceeded'));
+},
         processNestedData(data) {
             // 处理null或undefined
             if (data === null || data === undefined) {
