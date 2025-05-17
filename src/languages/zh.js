@@ -584,7 +584,7 @@ export default {
     permission: '您无权操作此页面'
   },
   ruleAnalysis: {
-    title: '规则调整执行结果分析',
+    title: '规则调整版本执行结果对比分析',
     rule: '规则',
     selectedRules: '已选规则',
     inputParam: '入参报文',
@@ -593,7 +593,7 @@ export default {
     submitSuccess: '提交成功',
     manualParam: '手动录入',
     uploadTip: '点击上传文件，支持.txt格式',
-    onlyTxtAllowed: '只能上传txt文件',
+    onlyTxtJsonAllowed: '只能上传txt文件或者json文件',
     fileExceeded: '已达到文件上传数量限制，请先删除当前文件',
     testResult: '测试结果',
     executeResult: '执行结果',
@@ -636,7 +636,7 @@ export default {
     decApp: '决策应用',
     decAppManage: '决策应用管理',
     flowChart: '可视化流程图',
-    ruleAnalysis: '规则调整对比',
+    ruleAnalysis: '规则调整版本执行分析',
   },
   store: {
     empty: 'codeServices获取为空',

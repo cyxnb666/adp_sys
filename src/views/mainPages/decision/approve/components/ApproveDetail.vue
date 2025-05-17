@@ -64,6 +64,14 @@
         <span slot="label"><i class="el-icon-date" /> {{ $t('approvelDetail.approvelTable') }}</span>
         <ApproveDecisionTable v-if="openPage" ref="decisionTable" :decision-url-id="decisionUrlId" />
       </el-tab-pane>
+      <el-tab-pane name="scorecard">
+        <!-- 评分卡审批 -->
+        <span slot="label"><i class="el-icon-s-data" /> {{ $t('scorecardApproval.scorecardApproval') }}</span>
+        <ScorecardApproval
+          v-if="tabValue === 'scorecard'"
+          :decision-url-id="decisionUrlId"
+        />
+      </el-tab-pane>
       <el-tab-pane name="ruleFlow">
         <!-- 规则流审批 -->
         <span slot="label"><i class="el-icon-date" /> {{ $t('approvelDetail.approvelRuleflow') }}</span>
@@ -133,7 +141,8 @@ export default {
     ComponentCurrentDecisionPath,
     RuleDetailShow: () =>
       import('@/components/RuleDetailShow/RuleDetailShow.vue'),
-    ApproveDecisionTable: () => import('./approveDecisionTable')
+    ApproveDecisionTable: () => import('./approveDecisionTable'),
+    ScorecardApproval: () => import('@/views/systemManage/management/component/scorecard/ScorecardApproval')
   },
   props: {
     ruleData: {

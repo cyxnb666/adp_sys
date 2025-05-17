@@ -51,6 +51,7 @@ export function getMethodList(data) {
     method: 'get'
   })
 }
+
 // 获取分组列表及对应的属性标签(级联)
 export function getGroupTagList(data) {
   return http({
@@ -58,6 +59,7 @@ export function getGroupTagList(data) {
     method: 'get'
   })
 }
+
 // 查询决策库信息，包含决策库基本信息、业务模型信息、关联规则信息等
 export function fullRepository(applicationId) {
   return http({
@@ -65,6 +67,7 @@ export function fullRepository(applicationId) {
     method: 'get'
   })
 }
+
 // 获取决策表
 export function getDecisionTableInfo(decisionTableId) {
   return http({
@@ -72,8 +75,9 @@ export function getDecisionTableInfo(decisionTableId) {
     method: 'get'
   })
 }
+
 // 版本对比
-export function compareDecisionTable(decisionTableId,mainVersion,secondVersion) {
+export function compareDecisionTable(decisionTableId, mainVersion, secondVersion) {
   return http({
     url: `/decision/table/history/compareDecisionTable/${decisionTableId}/${mainVersion}/${secondVersion}`,
     method: 'get'
@@ -102,6 +106,21 @@ export function getBomTree(data) {
   })
 }
 
+// /懒加载获取规则列表视图所需的BomTree
+export function getBomLazyLoadTree(bomBaseInfoId, loadMethod, fieldPath) {
+  return http({
+    url: `/bom/details/${bomBaseInfoId}/tree?loadMethod=${loadMethod}&fieldPath=${fieldPath}`,
+    method: 'get',
+  })
+}
+// /搜索Bom
+export function searchBom(bomBaseInfoId, key) {
+  return http({
+    url: `/bom/details/${bomBaseInfoId}/tree/search?loadMethod=true&key=${key}`,
+    method: 'get',
+  })
+}
+
 // /获取规则列表视图
 export function ruleListView(data) {
   return http({
@@ -110,6 +129,7 @@ export function ruleListView(data) {
     data
   })
 }
+
 // /根据规则编号逻辑删除/还原规则
 export function ruleDelOrRe(data) {
   return http({
@@ -118,6 +138,7 @@ export function ruleDelOrRe(data) {
     params: data
   })
 }
+
 // /历史版本还原
 export function restore(data) {
   return http({

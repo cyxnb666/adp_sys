@@ -1341,7 +1341,7 @@ export default {
     vInputValue: {
       async handler(newValue) {
         if (!this.treeData) {
-          await this.bomClassAndField()
+          //await this.bomClassAndField()
         }
         newValue.forEach((item, index) => {
           if (this.fieldParsing[index]) {
@@ -1429,7 +1429,7 @@ export default {
     this.ruleEditor = new RuleEditor()
     this.NODE_TYPE = NODE_TYPE
     this.getRuleResults()
-    this.getbomClassAndUpdateTime()
+    //this.getbomClassAndUpdateTime()
     this.getDecisionRepositoryDetail()
     getBomModelId(this.$store.state.bom.bomBaseInfo).then(res => {
       this.bomModelId = res

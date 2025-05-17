@@ -582,7 +582,7 @@ export default {
     submit: 'Submit',
     submitSuccess: 'Submitted successfully',
     uploadTip: 'Click to upload a file, supporting .txt format',
-    onlyTxtAllowed: 'Only txt files can be uploaded',
+    onlyTxtJsonAllowed: 'Only txt or json files can be uploaded',
     fileExceeded: 'Maximum number of files exceeded. Please delete the current file first',
     testResult: 'Test Results',
     executeResult: 'Execution Results',

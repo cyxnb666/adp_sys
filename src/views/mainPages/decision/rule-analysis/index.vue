@@ -46,11 +46,11 @@
                     <!-- 上传报文区域 -->
                     <div v-if="paramInputType === 'upload'" class="upload-area">
                         <el-upload class="upload-component" action="#" :auto-upload="false"
-    :on-change="handleFileChange" :file-list="fileList" :limit="1" 
-    :on-exceed="handleExceed" accept=".txt">
-    <el-button slot="trigger" size="small" type="primary">{{ $t('common.click') }}</el-button>
-    <div class="upload-tip" slot="tip">{{ $t('ruleAnalysis.uploadTip') }}</div>
-</el-upload>
+                            :on-change="handleFileChange" :file-list="fileList" :limit="1" :on-exceed="handleExceed"
+                            accept=".txt,.json">
+                            <el-button slot="trigger" size="small" type="primary">{{ $t('common.click') }}</el-button>
+                            <div class="upload-tip" slot="tip">{{ $t('ruleAnalysis.uploadTip') }}</div>
+                        </el-upload>
                     </div>
 
                     <!-- 手动录入区域 - JSON编辑器 -->
@@ -281,6 +281,32 @@ export default {
                     this.resetAllDisabled(option.children);
                 }
             });
+        },
+        disableOtherRulesVersions(options, selectedRuleId) {
+            const disableVersionsForRule = (opts) => {
+                if (!opts || !opts.length) return;
+
+                for (let opt of opts) {
+                    // 如果是规则节点且不是已选择的规则
+                    if (opt.leafType === 'RULE' && opt.ruleId !== selectedRuleId) {
+                        // 禁用该规则下的所有版本节点
+                        if (opt.children && opt.children.length) {
+                            opt.children.forEach(child => {
+                                if (child.leafType === 'VERSION_NO') {
+                                    child.disabled = true;
+                                }
+                            });
+                        }
+                    }
+
+                    // 递归处理子节点
+                    if (opt.children && opt.children.length) {
+                        disableVersionsForRule(opt.children);
+                    }
+                }
+            };
+
+            disableVersionsForRule(options);
         },
         disableOtherVersions(options, ruleId, selectedVersions) {
             // 递归查找规则节点
@@ -569,16 +595,16 @@ export default {
         },
         handleFileChange(file, fileList) {
             // 验证文件类型
-            if (file.raw && !file.raw.name.endsWith('.txt')) {
-                this.$message.warning(this.$t('ruleAnalysis.onlyTxtAllowed'));
-                this.fileList = fileList.filter(f => f.name.endsWith('.txt'));
+            if (file.raw && !file.raw.name.endsWith('.txt') && !file.raw.name.endsWith('.json')) {
+                this.$message.warning(this.$t('ruleAnalysis.onlyTxtJsonAllowed'));
+                this.fileList = fileList.filter(f => f.name.endsWith('.txt') || f.name.endsWith('.json'));
             } else {
                 this.fileList = fileList;
             }
         },
         handleExceed() {
-    this.$message.warning(this.$t('ruleAnalysis.fileExceeded'));
-},
+            this.$message.warning(this.$t('ruleAnalysis.fileExceeded'));
+        },
         processNestedData(data) {
             // 处理null或undefined
             if (data === null || data === undefined) {
@@ -1052,6 +1078,7 @@ export default {
             }
         }
     },
+    // 修改 watch.selectedRules 部分
     watch: {
         selectedRules(value) {
             // 创建选项的深拷贝
@@ -1062,6 +1089,7 @@ export default {
 
             // 收集所有被选中的版本节点信息
             const ruleVersionMap = {};
+            let selectedRuleId = null; // 记录已选择的规则ID
 
             // 处理不同格式的选择路径
             value.forEach(path => {
@@ -1086,6 +1114,11 @@ export default {
                         // 获取父节点(规则节点)信息
                         if (node.parent && node.parent.data) {
                             ruleId = node.parent.data.ruleId || node.parent.data.value;
+
+                            // 设置已选择的规则ID
+                            if (selectedRuleId === null) {
+                                selectedRuleId = ruleId;
+                            }
                         }
                     }
                 }
@@ -1102,15 +1135,17 @@ export default {
                 }
             });
 
-            // 处理每个规则的版本选择限制
-            Object.keys(ruleVersionMap).forEach(ruleId => {
-                const selectedVersions = ruleVersionMap[ruleId];
+            // 如果已选择了规则版本
+            if (selectedRuleId !== null) {
+                // 禁用所有其他规则的所有版本
+                this.disableOtherRulesVersions(newOptions, selectedRuleId);
 
-                // 如果某规则已选择两个版本，禁用其他版本
+                // 如果当前规则已选择两个版本，禁用该规则的其他版本
+                const selectedVersions = ruleVersionMap[selectedRuleId] || [];
                 if (selectedVersions.length === 2) {
-                    this.disableOtherVersions(newOptions, ruleId, selectedVersions);
+                    this.disableOtherVersions(newOptions, selectedRuleId, selectedVersions);
                 }
-            });
+            }
 
             // 更新!!!
             this.$nextTick(() => {

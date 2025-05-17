@@ -60,7 +60,9 @@
         <div style="display: flex;">
           <el-button-group style="display: flex; width:100%;margin-right: 10px;">
             <el-button size="small" disabled plain>POST</el-button>
-            <el-button size="small" disabled plain style="width:100%;text-align: left;">{{ request.requestUrl }}</el-button>
+            <el-button size="small" disabled plain style="max-width: 700px;
+    overflow: hidden;
+    display: block;text-align: left;">{{ request.requestUrl }}</el-button>
             <el-button size="small" type="primary" icon="el-icon-s-promotion" @click="send">发送</el-button>
           </el-button-group>
           <el-button size="small" type="primary" icon="el-icon-folder-opened">保存测试用例</el-button>
@@ -76,6 +78,7 @@
           border
           default-expand-all
           max-height="300"
+          max-width="868"
           :header-cell-style="{
             background: '#EFF4F8', color: '#60769C', fontWeight: 'normal'
           }"

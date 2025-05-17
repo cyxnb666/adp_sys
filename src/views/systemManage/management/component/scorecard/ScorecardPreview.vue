@@ -12,7 +12,7 @@
       </div>
     </div>
     <div v-else>
-      <!-- 1. 基本信息 -->
+      <!-- 基本信息区域 -->
       <div class="form-section basic-info-section">
         <div class="formItemDiv">
           <div class="info-item">
@@ -28,77 +28,79 @@
         </div>
       </div>
 
-      <!-- 2. 前置规则 -->
-      <div class="add-decision-table-item">
-        <div class="title">
-          <span>前置规则</span>
-        </div>
-        <div class="rule-preview">
-          <div class="rule-wrap">
-            <div class="rule-view">
-              <span class="value">如果：</span>
-              <span class="value valueContent" style="word-break: break-all;" v-html="localScorecardData && localScorecardData.rule && localScorecardData.rule.ruleDesc || '-'"/>
+      <!-- 非回收站模式显示详细信息 -->
+      <template v-if="!isReset">
+        <!-- 2. 前置规则 -->
+        <div class="add-decision-table-item">
+          <div class="title">
+            <span>前置规则</span>
+          </div>
+          <div class="rule-preview">
+            <div class="rule-wrap">
+              <div class="rule-view">
+                <span class="value">如果：</span>
+                <span class="value valueContent" style="word-break: break-all;" v-html="localScorecardData && localScorecardData.rule && localScorecardData.rule.ruleDesc || '-'"/>
+              </div>
             </div>
           </div>
         </div>
-      </div>
 
-      <!-- 3. 评分容器 -->
-      <div class="add-decision-table-item">
-        <div class="title">
-          <span>评分容器</span>
-        </div>
-        <el-row :gutter="20">
-          <el-col :span="16">
-            <div class="form-item-container">
-              <div class="form-item-label">选择存储总分的字段</div>
-              <div class="form-item-content">
-                <el-tooltip :content="localScorecardData && localScorecardData.scoreContainerFieldName || '未指定'" placement="top" :disabled="!localScorecardData || !localScorecardData.scoreContainerFieldName">
-                  <span class="field-display" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block;">{{ localScorecardData && localScorecardData.scoreContainerFieldName || '未指定' }}</span>
-                </el-tooltip>
+        <!-- 3. 评分容器 -->
+        <div class="add-decision-table-item">
+          <div class="title">
+            <span>评分容器</span>
+          </div>
+          <el-row :gutter="20">
+            <el-col :span="16">
+              <div class="form-item-container">
+                <div class="form-item-label">选择存储总分的字段</div>
+                <div class="form-item-content">
+                  <el-tooltip :content="localScorecardData && localScorecardData.scoreContainerFieldName || '未指定'" placement="top" :disabled="!localScorecardData || !localScorecardData.scoreContainerFieldName">
+                    <span class="field-display" style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis; display: block;">{{ localScorecardData && localScorecardData.scoreContainerFieldName || '未指定' }}</span>
+                  </el-tooltip>
+                </div>
               </div>
-            </div>
-          </el-col>
-          <el-col :span="8">
-            <div class="form-item-container">
-              <div class="form-item-label">总分</div>
-              <div class="form-item-content">
-                <span class="total-score-display">{{ localScorecardData && localScorecardData.totalScore || '-' }}</span>
+            </el-col>
+            <el-col :span="8">
+              <div class="form-item-container">
+                <div class="form-item-label">总分</div>
+                <div class="form-item-content">
+                  <span class="total-score-display">{{ localScorecardData && localScorecardData.totalScore || '-' }}</span>
+                </div>
               </div>
-            </div>
-          </el-col>
-        </el-row>
-      </div>
-
-      <!-- 4. 评分卡路径 -->
-      <div class="add-decision-table-item">
-        <div class="title">
-          <span>评分卡路径</span>
+            </el-col>
+          </el-row>
         </div>
 
-        <!-- 属性组标签导航 -->
-        <div class="attribute-groups-tabs">
-          <el-tag
-            v-for="(group, index) in (localScorecardData && localScorecardData.attributeGroups || [])"
-            :key="group.scorecardAttributeGroupId"
-            type="info"
-            effect="plain"
-            class="group-tab"
+        <!-- 4. 评分卡路径 -->
+        <div class="add-decision-table-item">
+          <div class="title">
+            <span>评分卡路径</span>
+          </div>
+
+          <!-- 属性组标签导航 -->
+          <div class="attribute-groups-tabs">
+            <el-tag
+              v-for="(group, index) in (localScorecardData && localScorecardData.attributeGroups || [])"
+              :key="group.scorecardAttributeGroupId"
+              type="info"
+              effect="plain"
+              class="group-tab"
+            >
+              <span>{{ group.groupName || `属性组 ${index + 1}` }}</span>
+            </el-tag>
+          </div>
+
+          <!-- 评分卡表格 -->
+          <el-table
+            :data="formattedTableData"
+            border
+            style="width: 100%; margin-top: 10px;"
+            empty-text="没有评分卡数据"
+            row-key="rowId"
+            class="scorecard-table"
+            :span-method="spanMethod"
           >
-            <span>{{ group.groupName || `属性组 ${index + 1}` }}</span>
-          </el-tag>
-        </div>
-
-        <!-- 评分卡表格 -->
-        <el-table
-          :data="formattedTableData"
-          border
-          style="width: 100%; margin-top: 10px;"
-          empty-text="没有评分卡数据"
-          row-key="rowId"
-          class="scorecard-table"
-          :span-method="spanMethod"
-        >
           <!-- 序号列 -->
           <el-table-column type="index" label="序号" width="60" align="center"></el-table-column>
 
@@ -189,13 +191,15 @@
           </el-table-column>
         </el-table>
       </div>
+      </template>
 
       <!-- 操作按钮 -->
-      <div style="margin-top: 20px; text-align: center;">
+      <div v-if="!readOnly" style="margin-top: 20px; text-align: center;">
         <!-- 测试评分卡功能将在后续版本实现 -->
         <!-- <el-button type="success" @click="handleTest">测试评分卡</el-button> -->
-        <el-button type="primary" @click="handleEdit">修改评分卡</el-button>
-        <el-button type="danger" @click="handleDelete">删除评分卡</el-button>
+        <el-button v-if="!isReset" type="primary" @click="handleEdit">修改评分卡</el-button>
+        <el-button v-if="!isReset" type="danger" @click="handleDelete">删除评分卡</el-button>
+        <el-button v-if="isReset" type="primary" class="btn-background mini" @click="handleRestore">还原</el-button>
       </div>
     </div>
   </div>
@@ -203,7 +207,7 @@
 
 <script>
 // 引入评分卡相关的API
-import { getScorecardDetail, deleteScorecard } from '@/api/mainPages/scorecard'
+import { getScorecardDetail, deleteScorecard, restoreScorecard } from '@/api/mainPages/scorecard'
 import { generateTableData, generateConditionRowsFromAttributes } from './ScorecardUtils'
 
 // 操作符定义
@@ -238,6 +242,14 @@ export default {
     scorecardData: {
       type: Object,
       default: null
+    },
+    readOnly: {
+      type: Boolean,
+      default: false
+    },
+    isReset: {
+      type: Boolean,
+      default: false
     }
   },
   data() {
@@ -551,6 +563,63 @@ export default {
         this.$message({
           type: 'info',
           message: '已取消删除'
+        });
+      });
+    },
+
+    // 处理还原按钮点击
+    handleRestore() {
+      // 获取评分卡ID
+      const data = this.scorecardData || this.localScorecardData;
+      const scorecardId = (data && data.scorecardInfoId) || (this.currentNode && this.currentNode.scorecardId);
+
+      // 检查评分卡ID是否存在
+      if (!scorecardId) {
+        this.$message({
+          message: '无法还原评分卡：评分卡ID不存在',
+          type: 'error'
+        });
+        return;
+      }
+
+      this.$confirm('此操作将还原该评分卡, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        // 调用还原API
+        this.loading = true;
+        restoreScorecard(scorecardId)
+          .then(res => {
+            this.loading = false;
+            this.$message({
+              message: '还原评分卡成功',
+              type: 'success'
+            });
+            // 触发事件，通知父组件刷新数据
+            const nodeInfo = this.currentNode || { id: scorecardId, leafType: 'SCORECARD' };
+            // 如果没有父路径，但有路径，则从路径中提取父路径
+            if (!nodeInfo.parentPath && nodeInfo.path) {
+              const pathParts = nodeInfo.path.split('/');
+              pathParts.pop(); // 移除最后一个元素（当前节点名称）
+              nodeInfo.parentPath = pathParts.join('/');
+            }
+            // 触发刷新决策库树形结构事件
+            this.$emit('getDecisionRepositoryDetail', nodeInfo.parentPath);
+            // 触发刷新恢复规则列表事件
+            this.$emit('getRestoreRuleList');
+          })
+          .catch(err => {
+            this.loading = false;
+            this.$message({
+              message: '还原评分卡失败: ' + (err.message || err),
+              type: 'error'
+            });
+          });
+      }).catch(() => {
+        this.$message({
+          type: 'info',
+          message: '已取消还原'
         });
       });
     }

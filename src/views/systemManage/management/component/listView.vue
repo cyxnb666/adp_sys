@@ -97,8 +97,18 @@
         <el-col :span="6">
           <div class="formLabel">包含规则变量/参数</div>
           <el-form-item>
-            <treeselect style="width: 100%" v-model="submitForm.includeParams" placeholder="包含规则变量/参数" :appendToBody="true"
-                        :multiple="true" :options="includeParamsOptions" :normalizer="normalizer" clearable/>
+            <SelectBomLazyLoadTree ref="SelectBomLazyLoadTree" title="包含规则变量/参数" @selectedBom="selectedBom"/>
+<!--            <el-cascader-->
+<!--              style="width: 100%"-->
+<!--              v-model="submitForm.includeParams"-->
+<!--              :options="includeParamsOptions"-->
+<!--              :props="props"-->
+<!--              :show-all-levels="false"-->
+<!--              collapse-tags-->
+<!--              placeholder="包含规则变量/参数"-->
+<!--              filterable-->
+<!--              clearable-->
+<!--            />-->
           </el-form-item>
         </el-col>
         <el-col :span="6" class="flex-end">
@@ -169,18 +179,17 @@
 
 <script>
 
-// import the component
-import Treeselect from '@riophae/vue-treeselect'
 // import the styles
-import '@riophae/vue-treeselect/dist/vue-treeselect.css'
 import {getBomTree, getGroupTagList, ruleDelOrRe, ruleListView} from "@/views/systemManage/management/api";
 import EditDecisionPreview from "@/views/systemManage/management/component/EditDecisionPreview.vue";
+import {Loading} from "element-ui";
+import SelectBomLazyLoadTree from "@/components/SelectBomLazyLoadTree/index.vue";
 
 export default {
   name: 'listView',
   components: {
-    EditDecisionPreview,
-    Treeselect
+    SelectBomLazyLoadTree,
+    EditDecisionPreview
   },
   props: {
     bomBaseData: {
@@ -239,7 +248,14 @@ export default {
       decisionData: {
         decisionTableId: ''
       }, // 决策表的数据
-      currentNodePath: ''
+      currentNodePath: '',
+      props: {
+        multiple: true,
+        emitPath: false,
+        value: "fieldPath",
+        label: "name",
+      },
+      pageLoading: null
     };
   },
   computed: {
@@ -252,13 +268,20 @@ export default {
   },
   watch: {},
   created() {
-    this.getBomTreeFn()
-    this.getGroupTagListFn()
-    this.onSearch(true)
+
   },
   mounted() {
   },
   methods: {
+    selectedBom(fieldPaths) {
+      this.submitForm.includeParams = fieldPaths;
+    },
+    initialize(){
+      this.pageLoading = Loading.service({ text: '努力加载中......', target: '.listView' })
+      this.getBomTreeFn()
+      this.getGroupTagListFn()
+      this.onSearch(true)
+    },
     getGroupTagListFn() {
       getGroupTagList().then((res) => {
         this.groupList = res.resp.map(group => ({
@@ -280,20 +303,14 @@ export default {
         this.submitForm[endKey] = ''
       }
     },
-    normalizer(node) {
-      return {
-        id: node.fieldPath || '',
-        label: node.name,
-        children: node.children || []
-      }
-    },
     getBomTreeFn() {
       const data = {
         bomBaseInfoId: this.$store.state.bom.bomBaseInfo
       }
       getBomTree(data).then((res) => {
-        console.log(res.resp)
         this.includeParamsOptions = [res.resp]
+      }).finally(() => {
+        if (this.pageLoading) this.pageLoading.close()
       })
     },
     // 分页功能

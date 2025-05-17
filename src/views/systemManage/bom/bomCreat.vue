@@ -39,7 +39,7 @@
         <div class="content">
           <div class="input-wrap">
             <div class="label">{{ $t('bomCreat.jarFiles') }}</div>
-            <div class="flex-wrap">
+            <div class="flex-wrap flex-wrap-upload">
               <!-- <el-input v-model="uploadName" disabled /> -->
               <el-upload
                 ref="upload"
@@ -299,7 +299,7 @@ export default {
   min-width: 100px;
 }
 
-.flex-wrap {
+.flex-wrap-upload {
   align-items: center;
 }
 

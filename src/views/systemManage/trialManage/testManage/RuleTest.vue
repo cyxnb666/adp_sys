@@ -4,22 +4,24 @@
       <div style="display: flex; width: 100%;">
         <div style="flex: 0 0 900px; border-right: 1px solid #ccc; padding: 10px;">
           <el-form ref="testForm" v-loading="loading" :model="form" label-width="100px">
-            <el-form-item label="用例名称：" prop="testName" :rules="{ required: true, message: '请输入', trigger: 'change' }">
+<!--            <el-form-item label="用例名称：" prop="testName" :rules="{ required: true, message: '请输入', trigger: 'change' }">
               <div style="display: flex;">
                 <el-input v-model="form.testName" />
-                <!-- <el-button size="small" type="primary" icon="el-icon-folder-opened">保存测试用例</el-button>  style="margin-right: 10px;"
-                        <el-button size="small" type="primary" icon="el-icon-document">生成报文</el-button> -->
+                &lt;!&ndash; <el-button size="small" type="primary" icon="el-icon-folder-opened">保存测试用例</el-button>  style="margin-right: 10px;"
+                        <el-button size="small" type="primary" icon="el-icon-document">生成报文</el-button> &ndash;&gt;
               </div>
-            </el-form-item>
+            </el-form-item>-->
             <el-form-item :label="$t('port.explain')+`：`">
               <div style="display: flex;">
                 <el-button-group style="display: flex; width:100%;margin-right: 10px;">
                   <el-button disabled plain>POST</el-button>
-                  <el-button disabled plain style="width:100%;text-align: left;">{{ requestUrl }}</el-button>
+                  <el-button disabled plain style="max-width: 700px;
+    overflow: hidden;
+    display: block;text-align: left;">{{ requestUrl }}</el-button>
                   <el-button type="primary" icon="el-icon-s-promotion" @click="send">发送</el-button>
                 </el-button-group>
-                <el-button type="primary" icon="el-icon-folder-opened" @click="saveTest">保存测试用例</el-button>
-                <el-button type="primary" icon="el-icon-document" @click="testHistory">测试记录</el-button>
+<!--                <el-button type="primary" icon="el-icon-folder-opened" @click="saveTest">保存测试用例</el-button>-->
+<!--                <el-button type="primary" icon="el-icon-document" @click="testHistory">测试记录</el-button>-->
               </div>
             </el-form-item>
             <el-form-item :label="$t('port.params')+`：`">
@@ -59,7 +61,7 @@
                             </el-table>
                         </el-form> -->
               <!-- </div> -->
-              <vxe-grid ref="gridRef" v-bind="gridOptions" style="height: 300px;">
+              <vxe-grid ref="gridRef" v-bind="gridOptions" style="height: 300px;max-width: 868px;">
                 <template #labelDefault>
                   <!-- <vxe-input v-model="headerSex"></vxe-input> -->
                   <span>{{ $t('port.fName') }}</span>

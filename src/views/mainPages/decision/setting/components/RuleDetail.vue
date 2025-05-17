@@ -36,6 +36,12 @@
         <ComponentDecisionTable :decision-url-id="decisionUrlId" />
       </el-tab-pane>
 
+      <el-tab-pane name="scorecardSet">
+        <span slot="label"><i class="el-icon-s-data" /> {{ $t('scorecardSetting.tabName') }}</span>
+        <!-- 评分卡设置 -->
+        <ScorecardSetting :decision-url-id="decisionUrlId" />
+      </el-tab-pane>
+
       <el-tab-pane name="ruleSet">
         <!-- 规则流设置 -->
         <span slot="label"><i class="el-icon-date" /> {{ $t('ruleDetail.ruleFlowSet') }}</span>
@@ -104,6 +110,7 @@ import ApproveDecisionTreeList from '@/views/mainPages/decision/approve/componen
 import { decisionTreeGetDecisionTree, saveOrUpdateTreeInDecUrl, getDecisionTreeListInDecisionUrl } from '@/api/mainPages/decisionTree.js'
 import decisionTreeList from './decisionTreeList'
 import RuleFlowList from './RuleFlowList'
+import ScorecardSetting from '@/views/systemManage/management/component/scorecard/ScorecardSetting'
 export default {
   name: 'RuleDetail',
   components: {
@@ -113,6 +120,7 @@ export default {
     RuleFlowList,
     ApproveDecisionTreeList,
     decisionTreeList,
+    ScorecardSetting,
     ComponentCurrentDecisionPath: () =>
       import('../../components/ComponentCurrentDecisionPath'),
     ComponentDecisionTable: () => import('./ComponentDecisionTable'),

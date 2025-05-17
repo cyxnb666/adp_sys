@@ -5,11 +5,14 @@
     <div class="chart lowTriggerMonitorRule">
       <div class="chartHeader">
         <div class="fourthRowTitle">低触发规则监控</div>
-        <div class="more" @click="more">更多</div>
+        <div class="more" @click="more">
+          <i class="el-icon-more"></i>
+        </div>
       </div>
       <div class="list">
         <div class="list-item" v-for="(item,index) in lowTriggerMonitorRule" :key="index">
-          <div class="ordinal">{{ index + 1 }}、</div>
+<!--          <div class="ordinal">{{ index + 1 }}、</div>-->
+          <div class="ordinal"><i class="el-icon-document"></i></div>
           <div class="ruleCode">{{ item.ruleId }}</div>
           <div class="description" :title="item.ruleName">{{ item.ruleName }}</div>
           <div class="dailyTriggerCount">日均触发<span style="color: #E17373">{{ item.count }}</span>次
@@ -383,6 +386,8 @@ export default {
     .list {
       height: calc(100% - 28px);
       overflow-y: auto;
+      font-size: 13px;
+      color: #3D3D3D;
 
       .list-item {
         display: flex;
@@ -393,6 +398,10 @@ export default {
         .ruleCode{
           width: 110px;
           margin-right: 10px;
+          text-overflow: ellipsis;
+          white-space: nowrap;
+          display: inline-block;
+          overflow: hidden;
         }
         .dailyTriggerCount{
           width: 100px;

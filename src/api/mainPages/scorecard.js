@@ -25,6 +25,14 @@ export function deleteScorecard(scorecardId) {
   })
 }
 
+// 还原评分卡
+export function restoreScorecard(scorecardId) {
+  return request({
+    url: `/scorecard/restore/${scorecardId}`,
+    method: 'post'
+  })
+}
+
 // 根据决策库ID获取评分卡列表
 export function getScorecardsByRepository(decisionRepositoryId, keyword) {
   return request({
@@ -54,6 +62,59 @@ export function getScorecardByName(data) {
 export function executeScorecard(data) {
   return request({
     url: '/scorecard/execute',
+    method: 'post',
+    data
+  })
+}
+
+// 查询决策路径下的评分卡设置列表
+export function getScorecardSettings(decisionUrlId, scorecardName) {
+  return request({
+    url: `/scorecard/setting/${decisionUrlId}`,
+    method: 'get',
+    params: { scorecardName }
+  })
+}
+
+// 保存评分卡设置
+export function postScorecardSetting(data) {
+  return request({
+    url: '/scorecard/setting',
+    method: 'post',
+    data
+  })
+}
+
+// 更新评分卡设置信息
+export function putScorecardSetting(data) {
+  return request({
+    url: '/scorecard/setting',
+    method: 'put',
+    data
+  })
+}
+
+// 删除评分卡设置
+export function deleteScorecardSetting(data) {
+  return request({
+    url: '/scorecard/setting',
+    method: 'delete',
+    data
+  })
+}
+
+// 查询待审批的评分卡设置
+export function getScorecardForApproval(decisionUrlId) {
+  return request({
+    url: `/scorecard/forApproval/${decisionUrlId}`,
+    method: 'get'
+  })
+}
+
+// 审批评分卡
+export function postScorecardApproval(data) {
+  return request({
+    url: '/scorecard/approval',
     method: 'post',
     data
   })

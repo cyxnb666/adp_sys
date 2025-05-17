@@ -298,6 +298,7 @@
                       v-else-if="showComponent === SHOWCOMPONENT.SCORECARDPREVIEW"
                       :current-node="currentNode"
                       :scorecard-data="scorecardData"
+                      :is-reset="activeName === 'recycleBin'"
                       @edit="handleEditScorecard"
                       @getDecisionRepositoryDetail="handleHighlightTree1"
                       @getRestoreRuleList="getRestoreRuleList"
@@ -324,7 +325,7 @@
           </el-tab-pane>
           <!-- 列表视图 -->
           <el-tab-pane label="列表视图" name="third">
-            <ListView @ruleEdit="handleRuleEdit" :bom-base-data="treeData2" :current-node-path="currentNode.path"
+            <ListView ref="ListView" @ruleEdit="handleRuleEdit" :bom-base-data="treeData2" :current-node-path="currentNode.path"
                       :decision-repository-id="decisionRepositoryModel.id"/>
           </el-tab-pane>
           <!-- 回收站 -->
@@ -441,6 +442,15 @@
                       :rule-id="currentNode.ruleId"
                       :decisionTableId="currentNode.decisionTableId"
                       :dialog-form-visible.sync="showHistoricalVersion"
+                    />
+                    <ScorecardPreview
+                      v-else-if="showComponent === SHOWCOMPONENT.SCORECARDPREVIEW"
+                      :current-node="currentNode"
+                      :scorecard-data="scorecardData"
+                      :is-reset="true"
+                      @edit="handleEditScorecard"
+                      @getDecisionRepositoryDetail="handleHighlightTree1"
+                      @getRestoreRuleList="getRestoreRuleList"
                     />
                   </div>
                   <NoData v-else :text="$t('ruleManage.selectBom')"/>
@@ -661,7 +671,7 @@ export default {
       contextMenuVisible: false, // 让菜单显示
       dialogVisible: false,
       addTypeDialogVisible: false,
-      addType: null,
+      addType: true,
       BomList: [],
       bomName: {
         bomName: ''
@@ -742,6 +752,13 @@ export default {
     }
   },
   watch: {
+    activeName(value){
+      if (value === 'third') {
+        this.$nextTick(() => {
+          this.$refs.ListView.initialize()
+        })
+      }
+    },
     showDecisionTables(nVal) {
       // !nVal &&
     },
@@ -1141,7 +1158,7 @@ export default {
       children.map((data) => {
 
         data.labelPath = parent.labelPath ? `${parent.labelPath}${data.label}` : data.label
-        data.fieldId = data.labelPath || 'root'
+        data.fieldId = data.id || 'root'
         // if (data.dataType === 'method') {
         // } else {
         //   data.labelPath = parent.labelPath ? `${parent.labelPath}${data.label}` : data.label

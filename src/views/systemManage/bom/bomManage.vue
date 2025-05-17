@@ -434,7 +434,7 @@ export default {
     formatTreeNode(children, parent) {
       children.map((data) => {
         data.labelPath = parent.labelPath ? `${parent.labelPath}${data.label}` : data.label
-        data.fieldId = data.labelPath || 'root'
+        data.fieldId = data.id || 'root'
         // if (data.dataType === 'method') {
         // } else {
         //   data.labelPath = parent.labelPath ? `${parent.labelPath}${data.label}` : data.label

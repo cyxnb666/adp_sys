@@ -24,8 +24,13 @@ export default {
     };
   },
   computed: {},
-  watch: {},
+  watch: {
+  },
   created() {
+  },
+  beforeDestroy() {
+    console.log('离开')
+    clearInterval(this.intervalLineChart)
   },
   mounted() {
     this.intervalLineChart = setInterval(this.updateStatist, 1000 * 60)

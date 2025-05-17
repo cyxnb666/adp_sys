@@ -89,8 +89,8 @@
         <el-cascader-panel
           ref="cascaderPanel"
           v-model="changeField"
-          :options="treeData"
-          :props="{ value: 'field', checkStrictly: true }"
+          :options="bomLazyLoadTree"
+          :props="{ value: 'field', checkStrictly: true , lazy: true, lazyLoad: lazyLoad,leaf:'hasChildren'}"
           @change="addParamsFn(index)"
         />
       </div>
@@ -104,6 +104,7 @@ import store from '@/store'
 import { RETURN_TYPE } from '@/utils/poc'
 import { getCodeService } from '@/utils/utils'
 import { bomClassAndField } from '@/api/systemManage/bom'
+import {getBomLazyLoadTree} from "@/views/systemManage/management/api";
 // import bus from '@/packages/PageRuleEditor/eventBus'
 export default {
   name: 'Vinput',
@@ -151,6 +152,7 @@ export default {
       startPos: 0, // 获取光标起始位置
       endPos: 0, // 获取光标结束位置
       inputNeedFieldPath: [],
+      bomLazyLoadTree: [],
       isValidInput: true,
       booleanOptions: [{ value: 'true', label: '是' }, { value: 'false', label: '否' }]
     }
@@ -271,12 +273,36 @@ export default {
     this.init()
     this.RETURN_TYPE = RETURN_TYPE
     this.remoteMethod()
+    this.getBomLazyLoadTreeFn()
     // const storedData = await this.$forage.getItem('bomBaseInfoId')
     // this.treeData = [storedData]
     // this.bomClassAndField()
     // this.bomBaseInfoId()
   },
   methods: {
+    getBomLazyLoadTreeFn(){
+      getBomLazyLoadTree(this.$store.state.bom.bomBaseInfo, true, '').then(res => {
+        res.resp.children.forEach(item => {
+          item.hasChildren = !item.hasChildren
+        })
+        this.bomLazyLoadTree = [res.resp]
+      })
+    },
+    async lazyLoad(node, resolve) {
+      const { level } = node
+      if (level === 0) {
+        return
+      }
+      if (level === 1) {
+        resolve([])
+        return
+      }
+      const res = await getBomLazyLoadTree(this.$store.state.bom.bomBaseInfo, true, node.data.fieldPath)
+      res.resp.forEach(item => {
+        item.hasChildren = !item.hasChildren
+      })
+      resolve(res.resp)
+    },
     // 错误提示
     validateInput() {
       // 在此处编写验证逻辑

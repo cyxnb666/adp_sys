@@ -1507,7 +1507,7 @@ export default {
     // this.getRuleList()
     // this.getRuleSetting()
     this.getRuleResults()
-    this.getbomClassAndUpdateTime()
+    //this.getbomClassAndUpdateTime()
     // const storedData = await this.$forage.getItem('bomBaseInfoId')
     // this.treeData = [storedData]
     // this.getbomClassAndUpdateTime()
